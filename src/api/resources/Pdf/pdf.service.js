@@ -1,7 +1,12 @@
 const puppeteer = require('puppeteer');
 const pdfTemp = require('../../utils/generateReceiptTemplate');
+// fs = require('fs');
+
 
 async function printPDF(htmlTemp) {
+    // fs.writeFile('helloworld.txt',  htmlTemp, function (err) {
+    //     if (err) return console.log(err);
+    // });
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.setContent(htmlTemp);
@@ -14,19 +19,11 @@ async function printPDF(htmlTemp) {
 
 const addPdf = async(req, res) => {
     try {
-        var htmlTemp =
-        pdfTemp({
-            pet: 'Rex',
-            vet: 'John Doe', 
-            service: 'Surgery',
-            owner:  'David Smith',
-            price: 2000.00
-        })
+        var htmlTemp = pdfTemp(req.body);
         await printPDF(htmlTemp);
-        res.send('test pdf')
+        res.send('test pdf');
     } catch (error) {
         res.status(400).send();
-        console.log(error); 
     }
 }
 
