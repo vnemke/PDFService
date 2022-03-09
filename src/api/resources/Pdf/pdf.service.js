@@ -1,27 +1,27 @@
 const puppeteer = require('puppeteer');
-const pdfTemp = require('../../utils/generateReceiptTemplate');
-// fs = require('fs');
+const pdfTempGenerate = require('../../utils/generateReceiptTemplate');
+const sendAttachment = require('./mail.service')
 
-
-async function printPDF(htmlTemp) {
-    // fs.writeFile('helloworld.txt',  htmlTemp, function (err) {
-    //     if (err) return console.log(err);
-    // });
+async function printPDF(htmlTemp, caseDetails) {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.setContent(htmlTemp);
     await page.emulateMediaType('screen');
-    const pdf =  await page.pdf({ path: 'downloads/pdf/test.pdf', printBackground: true});
+    var date = Date.now()
+    var pdfName = 'downloads/pdf/receipt-'+caseDetails.Pet.Name+'-'+date+'.pdf';
+    const pdf =  await page.pdf({ path: pdfName, printBackground: true});
+
+    await sendAttachment(caseDetails, pdfName);
 
     await browser.close();
-    return pdf
+    return pdf;
 }
 
 const addPdf = async(req, res) => {
     try {
-        var htmlTemp = pdfTemp(req.body);
-        await printPDF(htmlTemp);
-        res.send('test pdf');
+        var htmlTemp = pdfTempGenerate(req.body);
+        await printPDF(htmlTemp, req.body);
+        res.send();
     } catch (error) {
         res.status(400).send();
     }

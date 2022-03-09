@@ -24,8 +24,6 @@ function forServicePrices(arg) {
     arg.CasePetServices.forEach(s => {
       temp+='<div class="tService">'+s.PetService.Price+' RSD</div>'
     });
-  // temp+='</div>'
-
   return temp
 }
 

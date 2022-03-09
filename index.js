@@ -1,6 +1,9 @@
 const express = require('express');
-const apiRouter = require('./src/api/router/api.routes');
+require('dotenv').config();
 const app = express();
+
+const apiRouter = require('./src/api/router/api.routes');
+
 const port = 3000;
 
 app.get("/", (req, res) => {
